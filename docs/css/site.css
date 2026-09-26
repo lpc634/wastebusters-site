@@ -243,8 +243,18 @@ p { margin: 0 0 1em; max-width: 65ch; }
    public register (no cookies, no scripts: checked 26 Sept 2026). Its fixed
    330px fits the narrowest phone this site expects. */
 .ea-badge {
-  display: block; max-width: 100%; margin: 6px 0 20px;
+  display: block; max-width: 100%;
   border: 1px solid var(--line); border-radius: 6px; background: #fff; overflow: hidden;
+}
+/* The words and the badge side by side on a wide screen, so the badge reads as
+   the proof of the paragraph beside it rather than an interruption in it.
+   Lance, seeing it mid-text with empty space beside it: "a strange place".
+   On a phone it follows the words. */
+.legal { display: grid; gap: 8px 56px; align-items: center; }
+.legal__badge { margin: 0; }
+.legal__badge figcaption { font-size: .9rem; color: var(--muted); margin-top: 8px; }
+@media (min-width: 860px) {
+  .legal { grid-template-columns: minmax(0, 1fr) auto; }
 }
 
 /* Long reading pages: the privacy notice. */
