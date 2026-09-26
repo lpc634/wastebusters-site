@@ -239,6 +239,14 @@ p { margin: 0 0 1em; max-width: 65ch; }
 .field--trap { position: absolute; left: -10000px; width: 1px; height: 1px; overflow: hidden; }
 .or-wa { font-size: 1.05rem; }
 
+/* The Environment Agency's own badge for our licence, served live from the
+   public register (no cookies, no scripts: checked 26 Sept 2026). Its fixed
+   330px fits the narrowest phone this site expects. */
+.ea-badge {
+  display: block; max-width: 100%; margin: 6px 0 20px;
+  border: 1px solid var(--line); border-radius: 6px; background: #fff; overflow: hidden;
+}
+
 /* Long reading pages: the privacy notice. */
 .prose h2 { font-size: 1.35rem; margin-top: 1.6em; }
 .prose ul { padding-left: 1.2em; max-width: 65ch; }
