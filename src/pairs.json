@@ -1,0 +1,32 @@
+{
+  "garden-rubbish": {
+    "caption": "Garden rubbish",
+    "before": "Before: broken fence panels, a barbecue and a toy car piled on gravel",
+    "after": "After: the same gravel, clear"
+  },
+  "builders-rubble": {
+    "caption": "Builders' rubble",
+    "before": "Before: a heap of broken timber and building rubble in a back yard",
+    "after": "After: the yard cleared back to bare ground"
+  },
+  "garage-boxes": {
+    "caption": "Garage full of boxes",
+    "before": "Before: boxes, cable reels and flat-pack stacked in a garage",
+    "after": "After: the garage empty"
+  },
+  "flat-clearance": {
+    "caption": "Flat clearance",
+    "before": "Before: boxes, a desk and a dehumidifier in a flat",
+    "after": "After: an empty room with the carpet clear"
+  },
+  "green-waste": {
+    "caption": "Green waste",
+    "before": "Before: a thick layer of hedge cuttings by some garages",
+    "after": "After: the concrete swept clear"
+  },
+  "garden-junk": {
+    "caption": "Junk behind the shed",
+    "before": "Before: a mattress, a chair and bin bags piled against a shed",
+    "after": "After: grass by the shed, nothing left"
+  }
+}

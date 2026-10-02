@@ -1,0 +1,47 @@
+<section class="band band--quote" id="quote" aria-labelledby="quote-title">
+  <div class="wrap narrow">
+    <h2 id="quote-title">Get a free quote</h2>
+    <p class="band__intro">Tell us what needs to go and add a photo if you can. We'll reply with a price, usually the same day.</p>
+    <form class="quote-form" id="quote-form" method="post" enctype="multipart/form-data" action="{{formAction}}">
+      <input type="hidden" name="ref" id="q-ref">
+      <div class="field">
+        <label for="q-name">Your name</label>
+        <input id="q-name" name="name" type="text" autocomplete="name" required maxlength="120">
+      </div>
+      <div class="field">
+        <label for="q-phone">Phone</label>
+        <input id="q-phone" name="phone" type="tel" autocomplete="tel" required maxlength="40">
+      </div>
+      <div class="field">
+        <label for="q-email">Email <span class="optional">(optional)</span></label>
+        <input id="q-email" name="email" type="email" autocomplete="email" maxlength="254">
+      </div>
+      <div class="field">
+        <label for="q-postcode">Postcode</label>
+        <input id="q-postcode" name="postcode" type="text" autocomplete="postal-code" required maxlength="10" class="short">
+      </div>
+      <div class="field">
+        <label for="q-what">What needs clearing?</label>
+        <textarea id="q-what" name="description" rows="4" required maxlength="4000" placeholder="For example: a sofa, two mattresses and about ten bags from a first floor flat"></textarea>
+      </div>
+      <div class="field">
+        <label for="q-photos">Photos <span class="optional">(up to 5, optional)</span></label>
+        <input id="q-photos" name="photos" type="file" accept="image/*" multiple>
+        <p class="hint">A photo gets you a more accurate price.</p>
+      </div>
+      <!-- The trap for bots: a person never sees this box, and the receiver
+           throws away any send that has it filled. Called "wf_check" because
+           it must be a name no browser recognises. It was "company" until
+           2 October 2026, and a browser filling in a saved address can put
+           the customer's company name in a box called that. The stylesheet
+           hides it. -->
+      <div class="field field--trap" aria-hidden="true">
+        <label for="q-check">Leave this empty</label>
+        <input id="q-check" name="wf_check" type="text" tabindex="-1" autocomplete="off">
+      </div>
+      <button class="btn btn--red btn--block" type="submit">Send for a free quote</button>
+      <p class="hint">We only use your details to reply about this job. <a href="/privacy/">Privacy notice</a></p>
+    </form>
+    <p class="or-wa">Prefer WhatsApp? <a href="{{waQuote}}">Send a photo to {{phone}}</a></p>
+  </div>
+</section>

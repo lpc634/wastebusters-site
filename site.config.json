@@ -1,3 +1,15 @@
 {
-  "formAction": "https://app.graftday.com/enquire/wf_Ah_mk51FPf_jOYLRXcP24g"
+  "formAction": "https://app.graftday.com/enquire/wf_Ah_mk51FPf_jOYLRXcP24g",
+  "phone": "07765 229125",
+  "email": "info@wastebustersservices.co.uk",
+  "facebook": "https://www.facebook.com/profile.php?id=61589372280646",
+  "instagram": "https://www.instagram.com/waste.busters.services/",
+  "googleReviews": {
+    "rating": "5.0",
+    "count": 8,
+    "readOn": "2026-10-02",
+    "url": "https://www.google.com/maps?cid=10906725723491926081"
+  },
+  "mainTowns": ["Frimley", "Farnborough", "Aldershot", "Fleet", "Sandhurst", "Bracknell", "Bagshot", "Lightwater"],
+  "otherTowns": ["Windlesham", "Crowthorne", "Yateley", "Farnham", "Ascot", "Woking", "Wokingham", "Guildford", "Hook", "Windsor", "Reading"]
 }

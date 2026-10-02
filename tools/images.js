@@ -1,5 +1,6 @@
-// Prepares the site's images from their originals: the logo and favicons, and
-// the before and after job photos. Run with node from any folder:
+// Prepares the site's images from their originals: the logo and favicons, the
+// picture a shared link shows, and the before and after job photos. Run with
+// node from any folder:
 //
 //   node tools/images.js <folder of job photos>
 //
@@ -46,6 +47,28 @@ async function variant(input, name, width, height) {
   await sharp(ROUND).resize(32).png().toFile(path.join(OUT, 'favicon-32.png'));
   await sharp(ROUND).resize(180).flatten({ background: '#ffffff' }).png().toFile(path.join(OUT, 'apple-touch-icon.png'));
   await sharp(ROUND).resize(512).png().toFile(path.join(OUT, 'icon-512.png'));
+
+  // The picture shown when the link is sent on WhatsApp or posted on Facebook:
+  // 1200 by 630, the mascot on the site's near-black with the hero's faint
+  // brick and red band. It was the round icon, which those apps show as a
+  // small square beside the words. No words in it: the app prints the page's
+  // title underneath, and the site's fonts are not installed for sharp to
+  // draw with. No job photo either, so nothing about a customer's home is
+  // ever attached to a shared link.
+  const W = 1200, H = 630, BAND = 14;
+  const backdrop = Buffer.from(`<svg xmlns="http://www.w3.org/2000/svg" width="${W}" height="${H}">
+    <defs>
+      <pattern id="brick" width="72" height="48" patternUnits="userSpaceOnUse"><path d="M0 23.5h72M0 47.5h72M36 0v24M.5 24v24" stroke="#ffffff" stroke-opacity=".055" fill="none"/></pattern>
+      <radialGradient id="glow" cx="85%" cy="10%" r="90%"><stop offset="0" stop-color="#cc242c" stop-opacity=".16"/><stop offset=".6" stop-color="#cc242c" stop-opacity="0"/></radialGradient>
+    </defs>
+    <rect width="100%" height="100%" fill="#141213"/>
+    <rect width="100%" height="100%" fill="url(#brick)"/>
+    <rect width="100%" height="100%" fill="url(#glow)"/>
+    <rect y="${H - BAND}" width="100%" height="${BAND}" fill="#cc242c"/>
+  </svg>`);
+  const mascot = await sharp(LOGO).resize({ height: 470 }).png().toBuffer();
+  await sharp(backdrop).composite([{ input: mascot, gravity: 'centre' }])
+    .jpeg({ quality: 86, mozjpeg: true }).toFile(path.join(OUT, 'share.jpg'));
 
   if (photos) {
     const files = fs.readdirSync(photos);
