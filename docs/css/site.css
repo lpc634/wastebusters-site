@@ -149,10 +149,10 @@ p { margin: 0 0 1em; max-width: 65ch; }
 }
 
 /* The top of a page about one kind of job: the same black band without the
-   mascot, which belongs to the home page, and a line back to it. */
-.hero--page .hero__actions { margin-bottom: 0; }
-.crumb { font-size: .95rem; color: var(--on-dark-muted); margin-bottom: 1em; }
-.crumb a { color: var(--on-dark); }
+   mascot, which belongs to the home page, and a line back to it. The link is
+   padded so a thumb can hit it: it measured 20px tall on a phone. */
+.crumb { font-size: .95rem; color: var(--on-dark-muted); margin-bottom: .5em; }
+.crumb a { display: inline-block; padding: 10px 0; color: var(--on-dark); }
 .crumb a:hover { color: #fff; }
 
 /* Sections. */
@@ -174,7 +174,12 @@ p { margin: 0 0 1em; max-width: 65ch; }
   background: var(--red); border-radius: 2px; transform: rotate(45deg) translateY(-2px);
 }
 .card p { color: var(--muted); font-size: 1rem; }
-.card__more a { font-weight: 700; }
+/* A link on a line of its own that leads to another page or section. Padded
+   above and below, because on a phone it is the way into the page about that
+   kind of job and it measured 21px tall; the margin gives back what the
+   padding adds, so the card is no taller for it. */
+.more { margin: -4px 0 calc(1em - 10px); }
+.more a { display: inline-block; padding: 10px 0; font-weight: 700; }
 
 /* A second heading inside one band, which needs the air a new band would
    have given it. */
@@ -198,10 +203,6 @@ p { margin: 0 0 1em; max-width: 65ch; }
 .pairs { display: grid; gap: 18px; grid-template-columns: 1fr; }
 @media (min-width: 640px) { .pairs { grid-template-columns: repeat(2, 1fr); } }
 @media (min-width: 1000px) { .pairs { grid-template-columns: repeat(3, 1fr); } }
-/* One or two pairs on a page about one kind of job: two columns at most, in
-   the same narrow column as the words above them, so a single pair is not
-   left small in the corner of a wide page. */
-@media (min-width: 1000px) { .pairs--few { grid-template-columns: repeat(2, 1fr); } }
 .pair { margin: 0; }
 .pair__shots { display: grid; grid-template-columns: 1fr 1fr; gap: 4px; border-radius: var(--radius); overflow: hidden; }
 .pair__shots picture { position: relative; display: block; background: var(--ink-3); }
@@ -225,7 +226,6 @@ p { margin: 0 0 1em; max-width: 65ch; }
 .quote p { font-size: 1.06rem; color: var(--on-dark); }
 .quote p::before { content: "\201C"; color: var(--red); font: 900 2rem/0 var(--display); vertical-align: -0.35em; margin-right: 4px; }
 .quote footer { color: var(--on-dark-muted); font-size: .95rem; }
-.quotes--one { grid-template-columns: 1fr; }
 .link-light { color: var(--on-dark); }
 .link-light:hover { color: #fff; }
 
@@ -234,12 +234,6 @@ p { margin: 0 0 1em; max-width: 65ch; }
   background: var(--paper); border: 1px solid var(--line); border-radius: 999px;
   padding: 7px 14px; font-size: .98rem;
 }
-/* The same pills as links to the other pages. The link fills the pill, so
-   the whole of it can be pressed, and the page you are on is left out. */
-.towns--links li { padding: 0; background: var(--paper-2); }
-.towns--links a { display: block; padding: 11px 16px; font-weight: 700; text-decoration: none; }
-.towns--links a:hover { text-decoration: underline; }
-.towns--links li:has(> a[aria-current="page"]) { display: none; }
 
 /* Common questions. Each opens on a press, with no script: the browser's own
    <details>. The plus turns to a cross when open. */
@@ -315,12 +309,12 @@ p { margin: 0 0 1em; max-width: 65ch; }
 .site-foot a:hover { color: #fff; }
 .site-foot p { margin: 0 0 .5em; }
 .site-foot__grid { display: grid; gap: 22px; }
-/* The pages about each kind of job, one press from anywhere on the site. */
+/* The main parts of the site, one press from the foot of any page. */
 .site-foot__nav {
-  display: flex; flex-wrap: wrap; gap: 4px 22px;
-  padding-bottom: 20px; margin-bottom: 24px; border-bottom: 1px solid var(--ink-3);
+  display: flex; flex-wrap: wrap; gap: 0 22px;
+  padding-bottom: 16px; margin-bottom: 24px; border-bottom: 1px solid var(--ink-3);
 }
-.site-foot__nav a { padding: 6px 0; font-weight: 700; }
+.site-foot__nav a { padding: 10px 0; font-weight: 700; }
 @media (min-width: 800px) { .site-foot__grid { grid-template-columns: repeat(3, 1fr); } }
 .site-foot__name { font: 900 1.1rem/1.2 var(--display); font-stretch: 116%; text-transform: uppercase; color: var(--on-dark); }
 .site-foot__small { font-size: .88rem; margin-top: 1em !important; }

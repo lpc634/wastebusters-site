@@ -8,8 +8,10 @@
 // rarely, it loads instantly on a phone with one bar of signal, and there is
 // nothing on a server to break, patch or pay for.
 //
-// Since October 2026 more than one page asks for a quote (there is a page for
-// each main kind of job), so three things are written once and reused:
+// Since October 2026 more than one page asks for a quote (the home page, and
+// a page about house, flat and garage clearances, with room for more kinds of
+// job as the owner supplies the words), so three things are written once and
+// reused:
 //
 //   {{>name}}       a shared piece, src/parts/name.html. The quote form is
 //                   one, so the form and its bot trap are never copied by
@@ -36,7 +38,13 @@ const SITE = 'https://www.wastebustersservices.co.uk';
 const config = JSON.parse(fs.readFileSync(path.join(ROOT, 'site.config.json'), 'utf8'));
 const FORM_ACTION = process.env.FORM_ACTION || config.formAction;
 
-const read = f => fs.readFileSync(f, 'utf8');
+// Every file is read with Unix line endings whatever the checkout gave it.
+// Git on this PC hands out Windows ones on a fresh checkout, and a version
+// number worked out from the raw bytes then changed on all the pages with
+// nothing edited. .gitattributes now asks git for the same thing; this is the
+// second lock on the same door.
+const read = f => fs.readFileSync(f, 'utf8').replace(/\r\n/g, '\n');
+const sha = text => crypto.createHash('sha1').update(text).digest('hex');
 const layout = read(path.join(SRC, 'layout.html'));
 const pairs = JSON.parse(read(path.join(SRC, 'pairs.json')));
 const esc = s => String(s).replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;').replace(/"/g, '&quot;');
@@ -48,7 +56,7 @@ function publish(from, to) {
   const body = read(path.join(SRC, from));
   fs.mkdirSync(path.dirname(path.join(OUT, to)), { recursive: true });
   fs.writeFileSync(path.join(OUT, to), body);
-  return crypto.createHash('sha1').update(body).digest('hex').slice(0, 8);
+  return sha(body).slice(0, 8);
 }
 const cssV = publish('css/site.css', 'css/site.css');
 const jsV = publish('js/site.js', 'js/site.js');
@@ -147,9 +155,11 @@ function questionsOn(body, from) {
 }
 
 // The label. One business, described once, with only what this page shows:
-// the towns if the page names them, the job photos if the page has them. No
-// street and no postcode, to match the footer and the hidden address on
-// Google (the owner's choice). No rating and no review count, ever.
+// the towns if the page names them, the job photos if the page has them (and
+// no picture at all if it has none: the picture a shared link shows is not on
+// any page, so it stays out of here). No street and no postcode, to match the
+// footer and the hidden address on Google (the owner's choice). No rating and
+// no review count, ever.
 function label(meta, canonical, body, used, shown) {
   const id = SITE + '/#business';
   const area = used.has('towns') ? towns : used.has('mainTowns') ? ['Camberley', ...config.mainTowns] : null;
@@ -162,7 +172,7 @@ function label(meta, canonical, body, used, shown) {
     telephone: tel,
     email: config.email,
     logo: SITE + '/img/icon-512.png',
-    image: [...shown.map(slug => `${SITE}/img/${slug}-after.jpg`), facts.share],
+    ...(shown.length ? { image: shown.map(slug => `${SITE}/img/${slug}-after.jpg`) } : {}),
     address: { '@type': 'PostalAddress', addressLocality: 'Camberley', addressRegion: 'Surrey', addressCountry: 'GB' },
     openingHoursSpecification: [{
       '@type': 'OpeningHoursSpecification',
@@ -201,6 +211,20 @@ function label(meta, canonical, body, used, shown) {
   // "<" written as its code, so nothing in the words can close the script tag.
   return JSON.stringify({ '@context': 'https://schema.org', '@graph': graph }).replace(/</g, '\\u003c');
 }
+
+// The day each page last changed, for the sitemap, so Google can tell a page
+// that is new or different from one it has already read. pages.lock.json
+// remembers a fingerprint of each page's title, description and content, and
+// the day that fingerprint first appeared; the day only moves when the
+// fingerprint does. Not the day of the build, which would call every page new
+// every time, and not the date of the last commit, which is still the old
+// date while an edit is waiting to be committed. Google only uses these dates
+// while they stay honest. Commit the file along with the pages.
+const LOCK = path.join(ROOT, 'pages.lock.json');
+const before = fs.existsSync(LOCK) ? JSON.parse(read(LOCK)) : {};
+const after = {};
+const now = new Date();
+const today = [now.getFullYear(), now.getMonth() + 1, now.getDate()].map(n => String(n).padStart(2, '0')).join('-');
 
 const pages = fs.readdirSync(path.join(SRC, 'pages')).filter(f => f.endsWith('.html'));
 const urls = [];
@@ -242,21 +266,28 @@ for (const file of pages) {
   fill.quoteHref = body.includes('id="quote"') ? '#quote' : '/#quote';
   let html = put(layout);
   if (html.includes('{{')) throw new Error(`${file}: a placeholder was left unfilled`);
-  // A link to the page you are on says so, for screen readers and so the
-  // "what else we clear" list can leave the current page out.
+  // A link to the page you are on says so, for screen readers.
   html = html.split(`href="${meta.path}"`).join(`href="${meta.path}" aria-current="page"`);
   const target = meta.path === '/404.html' ? path.join(OUT, '404.html')
     : path.join(OUT, meta.path, 'index.html');
   fs.mkdirSync(path.dirname(target), { recursive: true });
   fs.writeFileSync(target, html);
-  if (!meta.noindex) urls.push(canonical);
+  if (!meta.noindex) {
+    // The form's address is left out of the fingerprint, so a trial build
+    // pointed at a test copy of Graftday does not read as a change.
+    const mark = sha([meta.title, meta.description, body.split(FORM_ACTION).join('')].join('\n')).slice(0, 12);
+    const was = before[meta.path];
+    after[meta.path] = { mark, changed: was && was.mark === mark ? was.changed : today };
+    urls.push({ loc: canonical, lastmod: after[meta.path].changed });
+  }
 }
+fs.writeFileSync(LOCK, JSON.stringify(Object.fromEntries(Object.keys(after).sort().map(k => [k, after[k]])), null, 2) + '\n');
 
 // The home page first, then the rest in a steady order.
-urls.sort((a, b) => a.length - b.length || a.localeCompare(b));
+urls.sort((a, b) => a.loc.length - b.loc.length || a.loc.localeCompare(b.loc));
 fs.writeFileSync(path.join(OUT, 'sitemap.xml'),
   '<?xml version="1.0" encoding="UTF-8"?>\n<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">\n'
-  + urls.map(u => `  <url><loc>${u}</loc></url>`).join('\n') + '\n</urlset>\n');
+  + urls.map(u => `  <url><loc>${u.loc}</loc><lastmod>${u.lastmod}</lastmod></url>`).join('\n') + '\n</urlset>\n');
 fs.writeFileSync(path.join(OUT, 'robots.txt'), `User-agent: *\nAllow: /\nSitemap: ${SITE}/sitemap.xml\n`);
 fs.writeFileSync(path.join(OUT, 'CNAME'), 'www.wastebustersservices.co.uk\n');
 // GitHub Pages would otherwise run the folder through Jekyll, which skips

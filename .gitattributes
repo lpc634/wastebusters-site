@@ -1,0 +1,9 @@
+# The same line endings on every checkout. Without this, git on Windows hands
+# out Windows line endings on a fresh checkout, and the build (which works out
+# a version number from the stylesheet and script) then changes every page
+# with nothing edited.
+* text=auto eol=lf
+*.png binary
+*.jpg binary
+*.webp binary
+*.woff2 binary

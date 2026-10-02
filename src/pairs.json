@@ -1,18 +1,18 @@
 {
   "garden-rubbish": {
     "caption": "Garden rubbish",
-    "before": "Before: broken fence panels, a barbecue and a toy car piled on gravel",
-    "after": "After: the same gravel, clear"
+    "before": "Before: old doors and boards, roofing sheets and bin bags left by a hedge",
+    "after": "After: the same spot by the hedge, clear"
   },
   "builders-rubble": {
-    "caption": "Builders' rubble",
-    "before": "Before: a heap of broken timber and building rubble in a back yard",
-    "after": "After: the yard cleared back to bare ground"
+    "caption": "Broken timber in a back yard",
+    "before": "Before: a heap of broken timber and sheeting in a back yard",
+    "after": "After: the same yard, cleared down to the concrete"
   },
   "garage-boxes": {
-    "caption": "Garage full of boxes",
-    "before": "Before: boxes, cable reels and flat-pack stacked in a garage",
-    "after": "After: the garage empty"
+    "caption": "Boxes cleared from an outbuilding",
+    "before": "Before: boxes, a cable reel and flat cardboard stacked against the wall of an outbuilding",
+    "after": "After: the same outbuilding, empty"
   },
   "flat-clearance": {
     "caption": "Flat clearance",
@@ -21,12 +21,12 @@
   },
   "green-waste": {
     "caption": "Green waste",
-    "before": "Before: a thick layer of hedge cuttings by some garages",
+    "before": "Before: a thick layer of cut branches and green waste in front of some garages",
     "after": "After: the concrete swept clear"
   },
   "garden-junk": {
     "caption": "Junk behind the shed",
-    "before": "Before: a mattress, a chair and bin bags piled against a shed",
+    "before": "Before: a chair, cushions and bin bags piled against a shed",
     "after": "After: grass by the shed, nothing left"
   }
 }

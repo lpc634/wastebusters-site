@@ -44,7 +44,7 @@ const unesc = s => s.replace(/&quot;/g, '"').replace(/&lt;/g, '<').replace(/&gt;
 // The long dashes, which the owner never wants in anything written for him
 // or his customers, in any file a visitor is sent.
 for (const f of files.filter(f => /\.(html|css|js|xml|txt)$/.test(f))) {
-  if (/[–—]/.test(fs.readFileSync(f, 'utf8'))) fault(rel(f), 'has a long dash in it');
+  if (/[\u2012\u2013\u2014\u2015]/.test(fs.readFileSync(f, 'utf8'))) fault(rel(f), 'has a long dash in it');
 }
 
 const pages = files.filter(f => f.endsWith('.html')).map(f => ({ f, where: rel(f), html: fs.readFileSync(f, 'utf8') }));
@@ -70,6 +70,9 @@ for (const p of pages) {
   const expected = where === '/404.html' ? '/404.html' : where.replace(/index\.html$/, '');
   if (canonical && canonical !== SITE + expected) fault(where, `canonical says ${canonical}, the page is at ${expected}`);
   if (robots !== 'noindex') indexable.push({ where, title, description, canonical });
+  // Google shows about 155 characters under a result and cuts the rest, so
+  // the reason to choose us has to fit inside that.
+  if (robots !== 'noindex' && description && unesc(description).length > 155) fault(where, `description is ${unesc(description).length} characters, Google cuts it at about 155`);
 
   // Every link, picture and file the page asks this site for is really there.
   const ids = idsOf(html);
@@ -135,12 +138,16 @@ for (const p of pages) {
     for (const link of business.sameAs || []) {
       if (!html.includes(`href="${link}"`)) fault(where, `label points at ${link}, which the page does not link to`);
     }
-    for (const img of [business.logo, ...business.image]) {
+    // A page with no job photo lists no picture. Every picture the label
+    // does list has to be one the page shows: the picture a shared link uses
+    // (share.jpg) is on no page, so it does not belong here.
+    const pictures = business.image || [];
+    for (const img of [business.logo, ...pictures]) {
       if (!img.startsWith(SITE) || !exists(img.slice(SITE.length))) fault(where, `label picture ${img} does not exist`);
     }
-    for (const img of business.image.filter(i => /-after\.jpg$/.test(i))) {
+    for (const img of pictures) {
       const slug = path.basename(img, '.jpg');
-      if (!html.includes(`/img/${slug}-sm.jpg`)) fault(where, `label picture ${slug} is not a photo on the page`);
+      if (!/-after\.jpg$/.test(img) || !html.includes(`/img/${slug}-sm.jpg`)) fault(where, `label picture ${path.basename(img)} is not a photo on the page`);
     }
     const service = graph.find(x => x['@type'] === 'Service');
     if (service) {
@@ -162,7 +169,17 @@ for (const p of pages) {
 
 // Pages meant to be found: each in the sitemap, each with its own title and
 // description, each reachable from the home page.
-const sitemap = [...fs.readFileSync(path.join(OUT, 'sitemap.xml'), 'utf8').matchAll(/<loc>([^<]+)<\/loc>/g)].map(m => m[1]);
+const sitemapXml = fs.readFileSync(path.join(OUT, 'sitemap.xml'), 'utf8');
+const sitemap = [...sitemapXml.matchAll(/<loc>([^<]+)<\/loc>/g)].map(m => m[1]);
+// Each address carries the day its page last changed, a real day and not one
+// that has not happened yet: Google stops reading these dates once it catches
+// one being wrong.
+const dated = [...sitemapXml.matchAll(/<url><loc>([^<]+)<\/loc><lastmod>(\d{4}-\d{2}-\d{2})<\/lastmod><\/url>/g)];
+if (dated.length !== sitemap.length) fault('/sitemap.xml', 'has an address with no date beside it (or a date not written as year-month-day)');
+for (const [, loc, day] of dated) {
+  const t = new Date(day + 'T00:00:00').getTime();
+  if (Number.isNaN(t) || t > Date.now()) fault('/sitemap.xml', `gives ${loc} the date ${day}, which is not a day that has happened`);
+}
 for (const p of indexable) {
   if (!sitemap.includes(p.canonical)) fault(p.where, 'is not in the sitemap');
   for (const other of indexable) {
@@ -181,6 +198,10 @@ for (const u of sitemap) {
 // The trap is only a trap if the stylesheet takes it off the page.
 const css = fs.readFileSync(path.join(OUT, 'css', 'site.css'), 'utf8');
 if (!/\.field--trap\s*\{\s*display:\s*none;?\s*\}/.test(css)) fault('/css/site.css', 'does not hide the trap with display: none');
+// A link written into a page and then hidden by the stylesheet is a hidden
+// link as far as Google is concerned, whatever the reason. If a page should
+// not show a link, leave the link out of the page.
+if (/aria-current[^{]*\{[^}]*display:\s*none/.test(css)) fault('/css/site.css', 'hides a link to the page you are on; leave the link out of the page instead');
 
 if (faults.length) {
   console.error(faults.join('\n'));
