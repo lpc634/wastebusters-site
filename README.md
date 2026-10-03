@@ -42,10 +42,12 @@ Three things are kept in one place each, so they cannot drift apart:
   on 2 October 2026 because they had been written from the job's name: one
   listed a barbecue and a toy car that are not in the photo, one said rubble
   where the photo shows broken timber, and one said garage where the photo
-  shows a hay feeder on the wall (so it may be a stable; it now says
-  "outbuilding", which is true either way, until the owner says which). The
-  file names still carry the old names (`builders-rubble`, `garage-boxes`);
-  they are only names.
+  shows a hay feeder on the wall. On 3 October the owner said what the three
+  jobs really were, and his words are the captions now: an old kitchen rip
+  out (`garden-rubbish`), broken up decking (`builders-rubble`) and a stable
+  clearance (`garage-boxes`). The file names still carry the old names; they
+  are only names, and renaming the images buys nothing. When a caption comes
+  from the owner, it wins over what the picture seems to show.
 
 ### The Google rating
 

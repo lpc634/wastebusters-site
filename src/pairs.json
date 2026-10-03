@@ -1,18 +1,18 @@
 {
   "garden-rubbish": {
-    "caption": "Garden rubbish",
-    "before": "Before: old doors and boards, roofing sheets and bin bags left by a hedge",
+    "caption": "Old kitchen rip out",
+    "before": "Before: boards and panels from a ripped out kitchen, with roofing sheets and bin bags, piled by a hedge",
     "after": "After: the same spot by the hedge, clear"
   },
   "builders-rubble": {
-    "caption": "Broken timber in a back yard",
-    "before": "Before: a heap of broken timber and sheeting in a back yard",
-    "after": "After: the same yard, cleared down to the concrete"
+    "caption": "Broken up decking",
+    "before": "Before: a heap of broken up decking in a back garden",
+    "after": "After: the same garden, cleared"
   },
   "garage-boxes": {
-    "caption": "Boxes cleared from an outbuilding",
-    "before": "Before: boxes, a cable reel and flat cardboard stacked against the wall of an outbuilding",
-    "after": "After: the same outbuilding, empty"
+    "caption": "Stable clearance",
+    "before": "Before: boxes, a cable reel and flat cardboard stacked inside a stable",
+    "after": "After: the same stable, empty"
   },
   "flat-clearance": {
     "caption": "Flat clearance",
