@@ -33,10 +33,14 @@
              shown on a phone too old to take out one photo at a time. The
              last line is read out by a screen reader when the list changes,
              and is never seen. The list says role="list" because Safari
-             stops calling a list a list once its bullets are styled away. -->
+             stops calling a list a list once its bullets are styled away.
+
+             The line saying why a photo was not added comes FIRST, straight
+             under the picker, and tools/check.js keeps it there: under a
+             list of five it was off the bottom of a phone's screen. -->
+        <p class="photo-problem" id="q-photo-problem" hidden></p>
         <ul class="photo-list" id="q-photo-list" role="list" aria-label="Photos you have chosen" hidden></ul>
         <button class="photo-clear" id="q-photo-clear" type="button" hidden>Remove all photos</button>
-        <p class="photo-problem" id="q-photo-problem" hidden></p>
         <p class="hint">A photo gets you a more accurate price.</p>
         <p class="visually-hidden" id="q-photo-live" role="status" aria-live="polite"></p>
       </div>

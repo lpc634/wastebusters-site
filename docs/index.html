@@ -23,7 +23,7 @@
 <link rel="apple-touch-icon" href="/img/apple-touch-icon.png">
 <link rel="preload" href="/fonts/archivo-latin.woff2" as="font" type="font/woff2" crossorigin>
 <link rel="preload" href="/fonts/atkinson-next-latin.woff2" as="font" type="font/woff2" crossorigin>
-<link rel="stylesheet" href="/css/site.css?v=b058fa36">
+<link rel="stylesheet" href="/css/site.css?v=5325c265">
 <script type="application/ld+json">
 {"@context":"https://schema.org","@graph":[{"@type":"LocalBusiness","@id":"https://www.wastebustersservices.co.uk/#business","name":"Waste Busters","description":"Waste clearance and rubbish removal in Camberley and about 15 miles around. Upper tier registered waste carrier, licence CBDU638282.","url":"https://www.wastebustersservices.co.uk/","telephone":"+447765229125","email":"info@wastebustersservices.co.uk","logo":"https://www.wastebustersservices.co.uk/img/icon-512.png","image":["https://www.wastebustersservices.co.uk/img/garden-rubbish-after.jpg","https://www.wastebustersservices.co.uk/img/builders-rubble-after.jpg","https://www.wastebustersservices.co.uk/img/garage-boxes-after.jpg","https://www.wastebustersservices.co.uk/img/flat-clearance-after.jpg","https://www.wastebustersservices.co.uk/img/green-waste-after.jpg","https://www.wastebustersservices.co.uk/img/garden-junk-after.jpg"],"address":{"@type":"PostalAddress","addressLocality":"Camberley","addressRegion":"Surrey","addressCountry":"GB"},"openingHoursSpecification":[{"@type":"OpeningHoursSpecification","dayOfWeek":["Monday","Tuesday","Wednesday","Thursday","Friday","Saturday","Sunday"],"opens":"07:00","closes":"19:00"}],"areaServed":["Camberley","Frimley","Farnborough","Aldershot","Fleet","Sandhurst","Bracknell","Bagshot","Lightwater","Windlesham","Crowthorne","Yateley","Farnham","Ascot","Woking","Wokingham","Guildford","Hook","Windsor","Reading"],"sameAs":["https://www.facebook.com/profile.php?id=61589372280646","https://www.instagram.com/waste.busters.services/","https://www.google.com/maps?cid=10906725723491926081"]},{"@type":"FAQPage","@id":"https://www.wastebustersservices.co.uk/#faq","mainEntity":[{"@type":"Question","name":"How do I get a price?","acceptedAnswer":{"@type":"Answer","text":"Send us a photo of what needs to go and your postcode, on WhatsApp or through the form on this page. We'll come back with a fixed price, usually the same day. No obligation."}},{"@type":"Question","name":"How soon can you come?","acceptedAnswer":{"@type":"Answer","text":"Same day when we can. We're open 7 days a week, 7am to 7pm."}},{"@type":"Question","name":"Do I have to load anything myself?","acceptedAnswer":{"@type":"Answer","text":"No. We load everything and sweep up after ourselves."}},{"@type":"Question","name":"Are you a licensed waste carrier?","acceptedAnswer":{"@type":"Answer","text":"Yes. We're an upper tier registered waste carrier, Environment Agency licence CBDU638282. You can look us up on the public register."}},{"@type":"Question","name":"Will I get paperwork?","acceptedAnswer":{"@type":"Answer","text":"Yes. Every job comes with a Waste Transfer Note, the legal record that your waste went to a licensed carrier."}},{"@type":"Question","name":"Is there anything you can't take?","acceptedAnswer":{"@type":"Answer","text":"We can't take fridges or freezers, paint, chemicals, asbestos, gas bottles, car tyres and wheels, batteries or fluorescent tubes. Your local recycling centre can take many of these."}},{"@type":"Question","name":"Do you take washing machines and cookers?","acceptedAnswer":{"@type":"Answer","text":"Yes, and dishwashers. Not fridges or freezers."}},{"@type":"Question","name":"Which areas do you cover?","acceptedAnswer":{"@type":"Answer","text":"We're based in Camberley and cover about 15 miles around, including Frimley, Farnborough, Aldershot, Fleet, Sandhurst, Bracknell, Bagshot and Lightwater. Not sure? Send us your postcode."}},{"@type":"Question","name":"How do I pay?","acceptedAnswer":{"@type":"Answer","text":"By card or cash."}}]}]}
 </script>
@@ -323,10 +323,14 @@
              shown on a phone too old to take out one photo at a time. The
              last line is read out by a screen reader when the list changes,
              and is never seen. The list says role="list" because Safari
-             stops calling a list a list once its bullets are styled away. -->
+             stops calling a list a list once its bullets are styled away.
+
+             The line saying why a photo was not added comes FIRST, straight
+             under the picker, and tools/check.js keeps it there: under a
+             list of five it was off the bottom of a phone's screen. -->
+        <p class="photo-problem" id="q-photo-problem" hidden></p>
         <ul class="photo-list" id="q-photo-list" role="list" aria-label="Photos you have chosen" hidden></ul>
         <button class="photo-clear" id="q-photo-clear" type="button" hidden>Remove all photos</button>
-        <p class="photo-problem" id="q-photo-problem" hidden></p>
         <p class="hint">A photo gets you a more accurate price.</p>
         <p class="visually-hidden" id="q-photo-live" role="status" aria-live="polite"></p>
       </div>
@@ -383,6 +387,6 @@
   <a class="action-bar__btn action-bar__btn--quote" href="#quote">Free quote</a>
 </nav>
 
-<script src="/js/site.js?v=d575ecd6" defer></script>
+<script src="/js/site.js?v=7d4b444a" defer></script>
 </body>
 </html>

@@ -146,7 +146,8 @@ title or description, a description is too long for Google to show whole, a
 page meant to be found is missing from the sitemap or not linked from the home
 page, a sitemap address has no date or a date that has not happened yet, the
 stylesheet hides a link, or a quote form has lost its trap or a piece of its
-list of chosen photos. Run it after every build.
+list of chosen photos, or has the line that says why a photo was not added
+anywhere but straight under the picker. Run it after every build.
 
 A page deleted from `src/pages/` must have its folder deleted from `docs/` by
 hand: the build does not tidy up after itself, and the check will say the
@@ -197,8 +198,12 @@ back out, and throws away the first choice when somebody chooses again. It was
 built and reviewed on the roofer's site first (3 October) and brought here on
 6 October. Choosing again adds to the list, because on a phone people pick one
 photo at a time. The list stops at five. A sixth, a photo over 12 MB, or the
-same photo twice is left out and named in a line under the list, and the ones
-already chosen are kept. Removing the last one leaves the form exactly as if
+same photo twice is left out and named in a line straight under the picker,
+above the list, and the ones already chosen are kept. (Above, because under a
+list of four or five the line was off the bottom of a phone's screen, and
+somebody back from their gallery saw nothing change. Measured at 320px wide
+on 6 October 2026; the check keeps it there.) Removing the last one leaves
+the form exactly as if
 none had been chosen. A screen reader is told about each change, and each
 button is announced with its file's name ("Remove sofa.jpg").
 
@@ -245,12 +250,39 @@ would be dropped. Everything is switched back on when the page is shown
 again.
 
 The bar at the bottom. On a phone, or in a narrow window, the bar fixed to
-the bottom of the screen covered a button reached with the Tab key: measured
-before the fix, a Remove came to rest wholly behind it, and at 640px wide so
-did Send. The form's boxes and buttons are now held 136px short of the bottom
-edge (`scroll-margin-bottom` in `site.css`). Chrome would be content with
-84px; Firefox moves the page later, and at 84px still left a Remove 5px
-under the bar.
+the bottom of the screen covers whatever a browser brings to the bottom edge,
+which is where it puts a box or button reached with the Tab key. On the site
+as it was, tabbing down the form in Chrome left a different box or button
+behind the bar at each window size. The page now tells the browser to keep
+its bottom 136px clear (`scroll-padding-bottom` on `html`, beside the bar's
+own rules in `site.css`). Going down the whole form with Tab, at eight
+window sizes from 320px to 899px wide, on both pages, with five photos listed
+and with none, every box and button comes to rest wholly above the bar: the
+lowest is 69px clear of it in Chrome 154 and 53px in Firefox 157. The
+footer's links, two of which the bar also covered, clear it as well.
+
+It is said once for the page and not on each box and button
+(`scroll-margin-bottom`), which was the first attempt and is how the roofer's
+site does it. Chrome brings a text box into view by the line that is typed
+on and ignores a distance written on the box: with that rule, Tab from
+Postcode left "What needs clearing?" with 115 of its 135px under the bar, at
+every size tried, and the first lines went in unseen. 136px rather than the
+84px that would clear the bar, because Firefox moves the page later than
+Chrome and at 84px still left a box 3px under it.
+
+One thing it does not cure, because the bar is not the cause: going back UP
+the form with Shift and Tab, either browser can leave a box or button a few
+pixels (Firefox, up to 25) off the TOP edge of the window. The site did that
+before the photo list existed. Curing it means a distance kept clear at the
+top of the page as well, which would also move where "Free quote" and every
+other jump down the page lands, so it was left.
+
+The picker's ring. The form draws a red ring round whichever box has the
+keyboard's place, and the picker was caught by the same rule. When the last
+photo is taken out the script puts the keyboard's place back on the picker,
+so after a finger or a mouse had removed it a red box appeared round an
+optional field, which reads as an error. The picker now shows its ring only
+when the keyboard is in use (`:focus-visible`).
 
 The list says `role="list"` and each row `role="listitem"`, which looks like
 saying it twice. Safari stops calling a list a list once its bullets are

@@ -81,9 +81,9 @@
     sayTimer = setTimeout(function () { live.textContent = text; }, 100);
   }
 
-  // The same refusal for somebody who can see: it stays on the page under the
-  // list until the next change, where a browser's own bubble is gone in a few
-  // seconds and on some phones never appears.
+  // The same refusal for somebody who can see: it stays on the page, straight
+  // under the picker, until the next change, where a browser's own bubble is
+  // gone in a few seconds and on some phones never appears.
   function showProblem(text) {
     problem.textContent = text;
     problem.hidden = !text;
@@ -270,7 +270,10 @@
       plain(slice(input.files), true);
       var sorry = 'That photo could not be taken out by itself. Press Remove all photos and choose again.';
       showProblem(sorry);
-      (clearAll.hidden ? input : clearAll).focus();
+      // The keyboard's place goes to the picker, which brings it onto the
+      // screen with those words straight under it. "Remove all photos" is
+      // under the list, and on a phone that can be a screen further down.
+      input.focus();
       say(sorry);
       return;
     }

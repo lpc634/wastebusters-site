@@ -271,6 +271,13 @@ p { margin: 0 0 1em; max-width: 65ch; }
 .field input.short { max-width: 220px; }
 .field input:focus, .field textarea:focus { outline: 3px solid var(--red); outline-offset: 1px; border-color: var(--red); }
 .field input[type="file"] { font: inherit; width: 100%; }
+/* The red ring two lines up is for a box somebody types in. The picker is a
+   button, and the script hands it the keyboard's place when the last photo
+   is taken out: after a finger or a mouse had done that, a red box round an
+   optional field read as "something is wrong here". So it keeps its ring
+   for the keyboard only. A browser too old to know :focus-visible skips
+   this rule and draws the ring as before. */
+.field input[type="file"]:focus:not(:focus-visible) { outline: 0; }
 /* The photos somebody has chosen, listed under the picker by js/site.js: a
    small picture, the file's name and a Remove button each. On a phone the
    name sits over its button, beside the picture: side by side at 320px the
@@ -305,6 +312,8 @@ p { margin: 0 0 1em; max-width: 65ch; }
   min-height: 44px; padding: 0 16px; cursor: pointer;
   font: 750 1rem/1 var(--display); font-stretch: 104%; color: var(--ink);
   background: var(--paper); border: 2px solid var(--ink); border-radius: var(--radius);
+  /* The short fade the site's other buttons have under a mouse (.btn). */
+  transition: background-color .15s ease-out, color .15s ease-out, border-color .15s ease-out;
 }
 .photo__remove { justify-self: start; }
 .photo-clear { margin-top: 10px; }
@@ -321,23 +330,6 @@ p { margin: 0 0 1em; max-width: 65ch; }
    on the form while it sends. */
 .quote-form[data-sending] .field input[type="file"] { opacity: .5; cursor: not-allowed; }
 .quote-form[data-sending] .field input[type="file"]::file-selector-button { cursor: not-allowed; }
-/* The bar fixed to the bottom of the screen on a phone or a narrow window
-   (.action-bar, 67px tall) covers whatever sits at the bottom edge, and the
-   bottom edge is exactly where a browser puts a button reached with the Tab
-   key. Measured here on 6 October 2026 before this rule: a Remove came to
-   rest wholly behind the bar, where Enter would still press it unseen, and
-   at 640px wide so did Send. This tells the browser to stop that far short
-   of the edge. 136px and not the 84px that clears the bar by itself: Chrome
-   stops exactly where it is told, but Firefox only moves the page once a
-   control is nearly out of sight. At 84px Firefox 157 still left a Remove
-   5px under the bar at 640px wide; at 136px the lowest thing rests 52px
-   clear of it in Firefox and 69px in Chrome. The figure is the roofer's
-   site's, found there on 3 October and measured again here. Nothing to
-   clear where the bar is not shown. */
-.quote-form input, .quote-form textarea, .quote-form button, .quote-form a { scroll-margin-bottom: calc(136px + env(safe-area-inset-bottom)); }
-@media (min-width: 900px) {
-  .quote-form input, .quote-form textarea, .quote-form button, .quote-form a { scroll-margin-bottom: 0; }
-}
 @media (min-width: 480px) {
   .photo { grid-template-columns: 64px minmax(0, 1fr) auto; }
   .photo__thumb { grid-row: auto; }
@@ -420,12 +412,25 @@ p { margin: 0 0 1em; max-width: 65ch; }
 .action-bar__btn:hover { color: #fff; }
 .action-bar__btn--wa { background: var(--wa); }
 .action-bar__btn--quote { background: var(--red); }
+/* The bar covers whatever sits at the bottom edge of the screen, which is
+   exactly where a browser puts a box or button reached with the Tab key. So
+   the page tells the browser to keep its bottom 136px clear.
+
+   Said once for the page, not on each box and button (scroll-margin-bottom,
+   which was the first attempt): Chrome brings a text box into view by the
+   line that is typed on and ignores a distance written on the box, which
+   left "What needs clearing?" 115px under the bar. 136px and not the 84px
+   that would clear the bar: Firefox moves the page later, and at 84px left
+   a box 3px under it. What was measured is in the README, "The bar at the
+   bottom". Nothing to keep clear on a desktop, where the bar is not shown. */
+html { scroll-padding-bottom: calc(136px + env(safe-area-inset-bottom)); }
 @media (min-width: 900px) {
   .action-bar { display: none; }
   body { padding-bottom: 0; }
+  html { scroll-padding-bottom: 0; }
 }
 
 @media (prefers-reduced-motion: reduce) {
   html { scroll-behavior: auto; }
-  .btn, .faq__item summary::after { transition: none; }
+  .btn, .photo__remove, .photo-clear, .faq__item summary::after { transition: none; }
 }

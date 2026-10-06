@@ -116,6 +116,13 @@ for (const p of pages) {
     for (const need of ['q-photos', 'q-photo-list', 'q-photo-clear', 'q-photo-problem', 'q-photo-live']) {
       if (!ids.has(need)) fault(where, `quote form has lost ${need}, which its list of chosen photos needs`);
     }
+    // The line that says why a photo was not added comes straight after the
+    // picker, before the list. Under the list, where it began, it was off
+    // the bottom of a small phone once four or five photos were listed.
+    const at = id => html.indexOf(` id="${id}"`);
+    if (ids.has('q-photo-problem') && ids.has('q-photo-list') && !(at('q-photos') < at('q-photo-problem') && at('q-photo-problem') < at('q-photo-list'))) {
+      fault(where, 'quote form has q-photo-problem (the line that says why a photo was not added) somewhere other than between the picker and the list');
+    }
   }
   if (!text.includes('07765 229125')) fault(where, 'does not show the phone number');
 
