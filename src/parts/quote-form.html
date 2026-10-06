@@ -26,8 +26,19 @@
       </div>
       <div class="field">
         <label for="q-photos">Photos <span class="optional">(up to 5, optional)</span></label>
-        <input id="q-photos" name="photos" type="file" accept="image/*" multiple>
+        <input id="q-photos" name="photos" type="file" accept="image/*" multiple aria-describedby="q-photo-problem">
+        <!-- What has been chosen, each with a Remove button, filled in by
+             js/site.js. All four start empty and hidden, so with no script
+             this is the plain picker it always was. The button is only ever
+             shown on a phone too old to take out one photo at a time. The
+             last line is read out by a screen reader when the list changes,
+             and is never seen. The list says role="list" because Safari
+             stops calling a list a list once its bullets are styled away. -->
+        <ul class="photo-list" id="q-photo-list" role="list" aria-label="Photos you have chosen" hidden></ul>
+        <button class="photo-clear" id="q-photo-clear" type="button" hidden>Remove all photos</button>
+        <p class="photo-problem" id="q-photo-problem" hidden></p>
         <p class="hint">A photo gets you a more accurate price.</p>
+        <p class="visually-hidden" id="q-photo-live" role="status" aria-live="polite"></p>
       </div>
       <!-- The trap for bots: a person never sees this box, and the receiver
            throws away any send that has it filled. Called "wf_check" because

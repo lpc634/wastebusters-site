@@ -109,6 +109,13 @@ for (const p of pages) {
     for (const need of ['name', 'phone', 'email', 'postcode', 'description', 'photos', 'ref']) {
       if (!new RegExp(`name="${need}"`).test(html)) fault(where, `quote form has lost its ${need} box`);
     }
+    // The list of chosen photos, each with its Remove, is filled in by
+    // js/site.js, which needs the picker and all four of its own pieces in
+    // the page. Missing one, it quietly leaves the browser's plain picker:
+    // nothing looks broken, and nobody can take a wrong photo back out.
+    for (const need of ['q-photos', 'q-photo-list', 'q-photo-clear', 'q-photo-problem', 'q-photo-live']) {
+      if (!ids.has(need)) fault(where, `quote form has lost ${need}, which its list of chosen photos needs`);
+    }
   }
   if (!text.includes('07765 229125')) fault(where, 'does not show the phone number');
 

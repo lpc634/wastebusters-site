@@ -145,8 +145,8 @@ than the page (a picture the page does not show included), two pages share a
 title or description, a description is too long for Google to show whole, a
 page meant to be found is missing from the sitemap or not linked from the home
 page, a sitemap address has no date or a date that has not happened yet, the
-stylesheet hides a link, or a quote form has lost its trap. Run it after every
-build.
+stylesheet hides a link, or a quote form has lost its trap or a piece of its
+list of chosen photos. Run it after every build.
 
 A page deleted from `src/pages/` must have its folder deleted from `docs/` by
 hand: the build does not tidy up after itself, and the check will say the
@@ -187,6 +187,99 @@ The app treats either name as the trap. If this site goes up before the app
 that knows the new name is deployed, nothing is lost: customers are
 unaffected, and a bot that fills the box gets through as an enquiry until the
 app catches up.
+
+### The photo picker
+
+Under "Photos" the page lists what the customer has chosen: a small picture,
+the file's name and a Remove button for each. Before October 2026 the picker
+was the browser's own, which says "3 files", gives no way to take a wrong one
+back out, and throws away the first choice when somebody chooses again. It was
+built and reviewed on the roofer's site first (3 October) and brought here on
+6 October. Choosing again adds to the list, because on a phone people pick one
+photo at a time. The list stops at five. A sixth, a photo over 12 MB, or the
+same photo twice is left out and named in a line under the list, and the ones
+already chosen are kept. Removing the last one leaves the form exactly as if
+none had been chosen. A screen reader is told about each change, and each
+button is announced with its file's name ("Remove sofa.jpg").
+
+It is all in `src/js/site.js`, and the four pieces it fills in are in the
+shared form, `src/parts/quote-form.html`, so every page with the form has it.
+The check fails if a form has lost one of them. The picker in the page is
+still what sends the photos: the script writes its list back into it after
+every change, so what is listed is what goes. With no script at all it is the
+plain picker it always was.
+
+The fallback. Writing a list back into the picker needs a browser that lets a
+script build one (`new DataTransfer()`), which iPhones before iOS 14.5 do not.
+There the picker works as it always did (choosing again replaces), the photos
+are still listed, and one "Remove all photos" button stands in for the Remove
+on each. Too many photos, or one too big, cannot be taken out for the customer
+there, so the form refuses to send until they choose again, in the words it
+has always used.
+
+No permission is needed for the small pictures. Each is shown straight from
+the customer's own phone, before anything is sent, at an address beginning
+`blob:`. This site sends no Content-Security-Policy: GitHub Pages cannot send
+headers of ours, and there is no such tag in `src/layout.html`. If a policy is
+ever added, its `img-src` must list `blob:` or the list shows grey squares.
+
+A press that lands on something that has moved. Taking a photo out pulls
+everything below it up the page, so the second half of a double tap on Remove
+(or of a mouse's double click) lands on whatever has slid under the thumb.
+Tried here: after a double tap on the only photo, that is the Send button. So
+for 700ms after a photo goes, a press made with a finger or a mouse anywhere
+on the page does nothing. On the whole page, not only in the form as on the
+roofer's site, because here a link sits right under the form ("Prefer
+WhatsApp?") with the footer's links after it. With the form alone guarded, a
+double tap on "Remove all photos" on a phone 320px wide opened WhatsApp. A
+second Remove pressed on purpose comes later than 700ms and works. The
+keyboard is not held back (nothing moves under a key), but a key held down
+is: only the first press of a held Enter counts, or it would press each
+Remove the keyboard had just been moved to and empty the list.
+
+While the form is sending, every Remove is switched off and grey, and the
+picker is faded and does nothing: a photo chosen then would have been listed
+and never sent. The picker is deliberately not switched off the ordinary way,
+because a switched-off field is left out of what a form sends and the photos
+would be dropped. Everything is switched back on when the page is shown
+again.
+
+The bar at the bottom. On a phone, or in a narrow window, the bar fixed to
+the bottom of the screen covered a button reached with the Tab key: measured
+before the fix, a Remove came to rest wholly behind it, and at 640px wide so
+did Send. The form's boxes and buttons are now held 136px short of the bottom
+edge (`scroll-margin-bottom` in `site.css`). Chrome would be content with
+84px; Firefox moves the page later, and at 84px still left a Remove 5px
+under the bar.
+
+The list says `role="list"` and each row `role="listitem"`, which looks like
+saying it twice. Safari stops calling a list a list once its bullets are
+styled away, and VoiceOver on an iPhone would lose "list, 3 items".
+
+Reloading the page gives an empty form with a new reference. Firefox
+otherwise puts back whatever was typed, and the chosen photo (seen on both
+pages as they were before this change). Coming BACK to the page (after
+sending, or from the privacy notice) is left alone on purpose: what was typed
+and chosen is still there, so a customer who goes back to add the photo they
+forgot does not start again, and Graftday files a changed second send as a
+second enquiry.
+
+One known cost of the reload. When the script has to be fetched again on a
+slow line (GitHub Pages lets a browser keep it for ten minutes, and inside
+that there is no gap), Firefox shows the old answers until it arrives, and a
+few letters typed in that gap are emptied with them. Once the script has
+started, typing is safe. Closing the gap needs `autocomplete="off"` on the
+form, which would stop a phone offering the customer's own name, number and
+postcode, so it was left.
+
+All of it was tried on 6 October 2026 in Chrome and in Firefox 157, on the
+home page and the house clearance page, at 320px, 390px and desktop widths,
+against a stand-in receiver on this computer: a copy of the site built with
+`FORM_ACTION` pointed at it, never the real form. Not tried on an iPhone:
+there is no Safari on this computer. To try a change the same way, build a
+copy with `FORM_ACTION=http://localhost:<port>/enquire/wf_...` set; the
+check will refuse to pass a build made like that, which is what stops one
+being published by mistake.
 
 ## Images
 
